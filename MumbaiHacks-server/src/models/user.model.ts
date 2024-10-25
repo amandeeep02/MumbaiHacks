@@ -1,9 +1,14 @@
 import { IUser } from "../Interfaces/user.interface";
 import mongoose from "mongoose";
 import crypto from "crypto";
+import { Schema } from "mongoose";
 
 const UserSchema = new mongoose.Schema<IUser>(
   {
+        _id: {
+                type: Schema.Types.ObjectId,
+                auto: true, // Automatically generate ObjectId
+              },
     firstName: {
       type: String,
       trim: true,
@@ -24,10 +29,10 @@ const UserSchema = new mongoose.Schema<IUser>(
     salt: {
       type: String,
     },
-    organizationId: {
-        type: mongoose.Schema.Types.ObjectId,
+    organizationIds: {
+        type: [Schema.Types.ObjectId],
         ref: 'Organization',
-        required: false, 
+        required: false,
       },
   },
   {

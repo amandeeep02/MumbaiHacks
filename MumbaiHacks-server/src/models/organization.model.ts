@@ -10,4 +10,4 @@ const organizationSchema = new mongoose.Schema<IOrganization>({
         employees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
     });
     
-    export const Organization = mongoose.model<IOrganization>('Organization', organizationSchema);
+    export const OrganizationModel = mongoose.model<IOrganization>('Organization', organizationSchema);
