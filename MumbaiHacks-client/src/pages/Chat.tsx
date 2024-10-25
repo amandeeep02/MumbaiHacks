@@ -4,12 +4,41 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import axiosInstance from '@/utility/axiosInterceptor'
+import { parse } from 'path'
 
 export default function Chat() {
     const [inputValue, setInputValue] = useState('')
     const [chatHistory, setChatHistory] = useState<any[]>([])
     const [loading, setLoading] = useState(false)
     const genAI = new GoogleGenerativeAI(`${import.meta.env.VITE_GOOGLE_API_KEY}`)
+
+    //write a tsx function to take date such as "24/10/2024" and convert to 2023-10-01T00:00:00.000Z
+    const convertDate = (date: String) => {
+        const dateArray = date.split('/')
+        const year = dateArray[2]
+        const month = dateArray[1]
+        const day = dateArray[0]
+        return `${year}-${month}-${day}T00:00:00.000Z`
+    }
+
+    const AddExpense = (amount: number, description: String, date: String, paymentMethod: String, tags: any) => {
+        axiosInstance
+            .post('/expenses',
+                {
+                    "organizationId": "671bed7fe260c817b36fee43",
+                    "amount": amount,
+                    "description": description,
+                    "date": convertDate(date),
+                    "paymentMethod": "Credit Card",
+                    "tags": tags,
+                    "createdBy": "671becaae260c817b36fee3c",
+                    "payeeType": "User",
+                    "payeeId": "671bef001f29eb67a5432c9f"
+                }
+            )
+    }
+
 
     const getResponseForGivenPrompt = async () => {
         try {
@@ -41,6 +70,9 @@ export default function Chat() {
             text = text.replace('\n```', '')
             console.log('text', text)
             const parsedResponse = JSON.parse(text)
+            if (parsedResponse.functionToBePeformed === 'addData') {
+                AddExpense(parsedResponse.RelevantData.Amount, parsedResponse.RelevantData.Description, parsedResponse.RelevantData.Date, parsedResponse.RelevantData.PaymentMethod, parsedResponse.tag)
+            }
 
             const appendChatHistoryResponse = [
                 ...appendChatHistory,
