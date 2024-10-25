@@ -1,6 +1,8 @@
 import TelegramBot from "node-telegram-bot-api";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from "axios";
+import * as fs from "fs";
+import * as crypto from "crypto";
 
 // Replace with your actual token
 const token: string = "7962210133:AAHhzogAtjTC3X9mBMFSW0cl7TdU19XHhv4";
@@ -9,17 +11,183 @@ const token: string = "7962210133:AAHhzogAtjTC3X9mBMFSW0cl7TdU19XHhv4";
 const bot = new TelegramBot(token, { polling: true });
 
 // Initialize Google Generative AI
-const genAI = new GoogleGenerativeAI(
-  "AIzaSyDR2qWdRiKg92wPWeqHflabXuKbw - k6m0k"
-);
+const genAI = new GoogleGenerativeAI("AIzaSyDR2qWdRiKg92wPWeqHflabXuKbw-k6m0k");
 
 // Get the generative model
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-// Listen for any kind of message
+// User management
+interface User {
+  chatId: number;
+  email: string;
+  passwordHash: string;
+  isVerified: boolean;
+}
+
+class UserManager {
+  private users: User[] = [];
+  private pendingVerifications: Map<number, string> = new Map();
+  private readonly usersFile = "users.json";
+
+  constructor() {
+    this.loadUsers();
+  }
+
+  private loadUsers() {
+    try {
+      if (fs.existsSync(this.usersFile)) {
+        const data = fs.readFileSync(this.usersFile, "utf8");
+        this.users = JSON.parse(data);
+      }
+    } catch (error) {
+      console.error("Error loading users:", error);
+    }
+  }
+
+  private saveUsers() {
+    try {
+      fs.writeFileSync(this.usersFile, JSON.stringify(this.users, null, 2));
+    } catch (error) {
+      console.error("Error saving users:", error);
+    }
+  }
+
+  isAuthorized(chatId: number): boolean {
+    return this.users.some((user) => user.chatId === chatId && user.isVerified);
+  }
+
+  async register(
+    chatId: number,
+    email: string,
+    password: string
+  ): Promise<string> {
+    if (this.users.some((user) => user.email === email)) {
+      return "Email already registered. Please use /login instead.";
+    }
+
+    const verificationCode = Math.random()
+      .toString(36)
+      .substring(2, 8)
+      .toUpperCase();
+    const passwordHash = crypto
+      .createHash("sha256")
+      .update(password)
+      .digest("hex");
+
+    const newUser: User = {
+      chatId,
+      email,
+      passwordHash,
+      isVerified: false,
+    };
+
+    this.users.push(newUser);
+    this.pendingVerifications.set(chatId, verificationCode);
+    this.saveUsers();
+
+    return `Registration successful! Your verification code is: ${verificationCode}\nUse /verify <code> to complete registration.`;
+  }
+
+  async verify(chatId: number, code: string): Promise<string> {
+    const storedCode = this.pendingVerifications.get(chatId);
+    if (!storedCode || storedCode !== code) {
+      return "Invalid verification code. Please try again.";
+    }
+
+    const user = this.users.find((u) => u.chatId === chatId);
+    if (user) {
+      user.isVerified = true;
+      this.saveUsers();
+      this.pendingVerifications.delete(chatId);
+      return "Verification successful! You can now use the bot.";
+    }
+
+    return "User not found. Please register first using /register.";
+  }
+
+  async login(
+    chatId: number,
+    email: string,
+    password: string
+  ): Promise<string> {
+    const passwordHash = crypto
+      .createHash("sha256")
+      .update(password)
+      .digest("hex");
+    const user = this.users.find(
+      (u) => u.email === email && u.passwordHash === passwordHash
+    );
+
+    if (!user) {
+      return "Invalid email or password.";
+    }
+
+    user.chatId = chatId; // Update chat ID in case it changed
+    user.isVerified = true;
+    this.saveUsers();
+    return "Login successful!";
+  }
+}
+
+const userManager = new UserManager();
+
+// Command handlers
+bot.onText(/\/start/, async (msg) => {
+  const chatId = msg.chat.id;
+  await bot.sendMessage(
+    chatId,
+    "Welcome! Please use one of the following commands:\n" +
+      "/register <email> <password> - Register new account\n" +
+      "/login <email> <password> - Login to existing account\n" +
+      "/verify <code> - Verify your registration"
+  );
+});
+
+bot.onText(/\/register (.+) (.+)/, async (msg, match) => {
+  if (!match) return;
+  const chatId = msg.chat.id;
+  const email = match[1];
+  const password = match[2];
+  const response = await userManager.register(chatId, email, password);
+  await bot.sendMessage(chatId, response);
+});
+
+bot.onText(/\/login (.+) (.+)/, async (msg, match) => {
+  if (!match) return;
+  const chatId = msg.chat.id;
+  const email = match[1];
+  const password = match[2];
+  const response = await userManager.login(chatId, email, password);
+  await bot.sendMessage(chatId, response);
+});
+
+bot.onText(/\/verify (.+)/, async (msg, match) => {
+  if (!match) return;
+  const chatId = msg.chat.id;
+  const code = match[1];
+  const response = await userManager.verify(chatId, code);
+  await bot.sendMessage(chatId, response);
+});
+
+// Main message handler
 bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
   const inputValue = msg.text || "";
+
+  // Skip authentication check for commands
+  if (inputValue.startsWith("/")) {
+    return;
+  }
+
+  // Check if user is authorized
+  if (!userManager.isAuthorized(chatId)) {
+    await bot.sendMessage(
+      chatId,
+      "You need to register and verify your account first.\n" +
+        "Use /start to see available commands."
+    );
+    return;
+  }
 
   try {
     // Generate content using the correct method
@@ -46,7 +214,6 @@ bot.on("message", async (msg) => {
 
     // Full JSON response for backend processing
     const { userID, functionToBePeformed, tag, RelevantData } = jsonResponse;
-
     // Handle backend logic with the JSON structure here as needed
   } catch (error) {
     console.error("Error calling Google Generative AI:", error);
