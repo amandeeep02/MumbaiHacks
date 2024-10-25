@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import axiosInstance from '@/utility/axiosInterceptor'
-import { parse } from 'path'
+import { postRequest } from '@/utility/generalServices'
 
 export default function Chat() {
   const [inputValue, setInputValue] = useState('')
@@ -22,14 +22,14 @@ export default function Chat() {
     return `${year}-${month}-${day}T00:00:00.000Z`
   }
 
-  const AddExpense = (
+  const AddExpense = async (
     amount: number,
     description: String,
     date: String,
     paymentMethod: String,
     tags: any
   ) => {
-    axiosInstance.post('/expenses', {
+    await postRequest('/expenses', {
       organizationId: '671bed7fe260c817b36fee43',
       amount: amount,
       description: description,
@@ -40,6 +40,8 @@ export default function Chat() {
       payeeType: 'User',
       payeeId: '671bef001f29eb67a5432c9f',
     })
+
+    console.log("Hello");
   }
 
   const getResponseForGivenPrompt = async () => {
@@ -73,15 +75,15 @@ export default function Chat() {
       text = text.replace('\n```', '')
       console.log('text', text)
       const parsedResponse = JSON.parse(text)
-      if (parsedResponse.functionToBePeformed === 'addData') {
-        AddExpense(
-          parsedResponse.RelevantData.Amount,
-          parsedResponse.RelevantData.Description,
-          parsedResponse.RelevantData.Date,
-          parsedResponse.RelevantData.PaymentMethod,
-          parsedResponse.tag
-        )
-      }
+      // if (parsedResponse.functionToBePeformed === 'addData') {
+      AddExpense(
+        parsedResponse.RelevantData.Amount,
+        parsedResponse.RelevantData.Description,
+        parsedResponse.RelevantData.Date,
+        parsedResponse.RelevantData.PaymentMethod,
+        parsedResponse.tag
+      )
+      // }
 
       const appendChatHistoryResponse = [
         ...appendChatHistory,
@@ -129,9 +131,8 @@ export default function Chat() {
           {chatHistory.map((chat, index) => (
             <div
               key={index}
-              className={`${
-                chat.userID === 'chatBot' ? 'text-right' : 'text-left'
-              } bg-muted/100 p-2 rounded font-semibold`}
+              className={`${chat.userID === 'chatBot' ? 'text-right' : 'text-left'
+                } bg-muted/100 p-2 rounded font-semibold`}
             >
               <p className="text-lg">{chat.textContent}</p>
             </div>

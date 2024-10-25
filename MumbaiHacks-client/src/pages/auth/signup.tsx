@@ -12,42 +12,29 @@ import { Label } from '@/components/ui/label'
 import { Layout } from '@/components/Layout'
 import { createAccount } from '@/api/auth/signup'
 import { useState } from 'react'
-import { IUser } from '@/types/interface'
-
 import { toast } from 'sonner'
 
 export function Signup() {
-  const [formState, setFormState] = useState<IUser>({
+  const [formState, setFormState] = useState({
     firstName: '',
     lastName: '',
     emailId: '',
     password: '',
     confirmPassword: '',
-    role: '',
-    location: '',
-    phone: '',
+    mobile_number: '',
   })
 
   const [loading, setLoading] = useState(false)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target
     setFormState((prevState) => ({
       ...prevState,
       [name]: value,
     }))
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormState((prevState) => ({
-        ...prevState,
-        labReport: e.target.files![0],
-      }))
-    }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -146,6 +133,19 @@ export function Signup() {
                   type="password"
                   placeholder="Confirm your password"
                   value={formState.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="mobile-number">Mobile Number</Label>
+                <Input
+                  id="mobile-number"
+                  name="mobile_number"
+                  placeholder="123-456-7890"
+                  value={formState.mobile_number}
                   onChange={handleChange}
                   required
                   disabled={loading}

@@ -9,11 +9,11 @@ import { Route, Routes } from 'react-router-dom'
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="*" element={<Landing />} />
+      <Route path="*" element={<DashboardPage />} />
       <Route path="/chat" element={<Chat />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
+      {/* <Route path="/dashboard" element={<DashboardPage />} /> */}
       <Route path="/transaction" element={<TransactionPage />} />
     </Routes>
   )
