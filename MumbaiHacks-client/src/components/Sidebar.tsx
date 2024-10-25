@@ -9,22 +9,21 @@ const Sidebar: React.FC = () => {
         <div className="flex h-[60px] items-center border-b px-6">
           <Link to="#" className="flex items-center gap-2 font-semibold">
             <span className="">Dhan Rashi</span>
+            <button></button>
           </Link>
         </div>
         <div className="flex-1 overflow-auto py-2">
           <nav className="grid items-start px-4 text-sm font-medium">
-            <NavLink to="#" icon="HomeIcon">
+            <NavLink to="/dashboard" icon="HomeIcon">
               Dashboard
             </NavLink>
             <NavLink to="#" icon="BarChartIcon">
               Reports
             </NavLink>
-            <NavLink to="#" icon="DollarSignIcon" active>
+            <NavLink to="/transaction" icon="DollarSignIcon">
               Transactions
             </NavLink>
-            <NavLink to="#" icon="UserIcon">
-              Clients
-            </NavLink>
+
             <NavLink to="#" icon="SettingsIcon">
               Settings
             </NavLink>
