@@ -52,9 +52,6 @@ app.use(compression());
 app.use(passport.initialize());
 passportInit(passport);
 
-// Routes
-routes(app);
-
 // Global error handler
 app.use(
   globalErrorHandler as unknown as (

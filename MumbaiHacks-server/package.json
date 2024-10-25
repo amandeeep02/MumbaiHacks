@@ -22,6 +22,7 @@
     "@types/lodash": "^4.14.202",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.12.12",
+    "@types/node-telegram-bot-api": "^0.64.7",
     "@types/nodemailer": "^6.4.14",
     "@types/passport": " ^1.0.16",
     "@types/passport-google-oauth": "^1.0.45",
@@ -30,6 +31,7 @@
     "nodemon": "^3.0.1"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "chai": "^5.0.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
@@ -47,6 +49,7 @@
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
     "node-fetch": "^3.3.2",
+    "node-telegram-bot-api": "^0.66.0",
     "nodemailer": "^6.9.8",
     "passport": "^0.6.0",
     "passport-google-oauth": "^2.0.0",
