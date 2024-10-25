@@ -45,4 +45,4 @@ const incomeSchema = new mongoose.Schema<IIncome>({
     },
 });
 
-export const Income = mongoose.model<IIncome>("Income", incomeSchema);
+export const IncomeModel = mongoose.model<IIncome>("Income", incomeSchema);

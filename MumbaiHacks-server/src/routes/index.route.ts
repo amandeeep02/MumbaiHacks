@@ -3,6 +3,7 @@ import usersRouter from "./user.route";
 import passport from "passport";
 import organizationRoutes from "./organization.route";
 import expenseRoutes from "./expense.route";
+import incomeRoutes from "./income.route";
 
 export const routes = (app: any) => {
   app.use("/api/auth", authRouter);
@@ -21,4 +22,11 @@ export const routes = (app: any) => {
     passport.authenticate("jwt", { session: false }),
     expenseRoutes
   );
+
+        app.use(
+        "/api/incomes",
+        passport.authenticate("jwt", { session: false }),
+        incomeRoutes
+        );
+
 };
