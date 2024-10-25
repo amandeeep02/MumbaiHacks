@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { GoogleGenerativeAI } from '@google/generative-ai'
@@ -28,7 +28,7 @@ export default function Chat() {
             console.log('pressed')
             const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
             const toSend =
-                'You are a finance helper, give in consistent format, recheck if you have followed all commands in this prompt, and give a valid json, also make sure its just plain text dont format it at all just send text purely information with no jargon only purely english characters and `.` and `,` obiviously no `*` and all, so there will be five fields, userID which will always be `chatBot`, and the other field is `textContent` which will be the response to the query like the actual answer to the query asked in which give some confirmation to what you have done and if you dont understand the user input, dont return any functions to perform and ask for clarification, `functionToBePeformed` for which here is the list -> {addData, fetchData, emailTo, createReport, deleteData, None}, and finally `tag`, multiple of which can be assigned and {Travel, Food, OfficeSupply, MarketingExpense, TechExpense, ResearchAndDevelopment, OfficeBills, Miscellaneous}, and finally `RelevantData`, which is a map of the following fields with relevant data attached, and for date, if nothing is mentioned make it `26/10/2024`, and the currency is by default rupees so if a number is randomly mentioned think of it as just money - {ExpenseOrProfit, Date, Amount, Description, PaymentMethod, PayeeID}, and if the relevant data is not something you can make out from the message, just add `none` in front of it. Please recheck make sure the response is correct format. The next sentence onwards it will be the user speaking-> ' +
+                'You are a finance helper, give in consistent format, recheck if you have followed all commands in this prompt, and give a valid json, also make sure its just plain text dont format it at all just send text purely information with no jargon only purely english characters and `.` and `,` obiviously no `*` and all, so there will be five fields, userID which will always be `chatBot`, and the other field is `textContent` which will be the response to the query like the actual answer to the query asked in which give some confirmation to what you have done and if you dont understand the user input, dont return any functions to perform and ask for clarification, `functionToBePeformed` for which here is the list -> {addData, fetchData, createReportAndEmailTo, createReport, deleteData, None}, and finally `tag`, multiple of which can be assigned and {Travel, Food, OfficeSupply, MarketingExpense, TechExpense, ResearchAndDevelopment, OfficeBills, Miscellaneous}, and finally `RelevantData`, which is a map of the following fields with relevant data attached, and for date, if nothing is mentioned make it `26/10/2024`, and the currency is by default rupees so if a number is randomly mentioned think of it as just money - {ExpenseOrProfit, Date, Amount, Description, PaymentMethod, PayeeID}, if functionToPerform is `createReportAndEmailTo` then make sure the user enters email too which is added in relevant information as `emailToSendTo` and take a `startDate` and `endDate` and if deleting, make sure the user provides the relevant information required to know what to delete as the field `informationToDelete` and if the relevant data is not something you can make out from the message, just add it as `none` but do not make up your own data for the fields, since this is being put into a real database of real expenses, but if Amount is not mentioned then it wont work. Please recheck make sure the response is correct format. The next sentence onwards it will be the user speaking-> ' +
                 inputValue
             setInputValue('')
             console.log('toSend', toSend)
@@ -62,14 +62,13 @@ export default function Chat() {
         <div className="flex flex-col h-screen">
             <header className="bg-primary text-primary-foreground py-4 px-6 flex items-center justify-between">
                 <a href="/">
-                    <h2 className="text-xl font-bold">{`< Back to home`}</h2>
+                    <h2 className="text-xl font-bold">{`< Dashboard`}</h2>
                 </a>
                 <div className="flex items-center gap-2">
                     <Avatar className="w-8 h-8">
-                        <AvatarImage src="/placeholder-user.jpg" alt="AI Avatar" />
                         <AvatarFallback>AI</AvatarFallback>
                     </Avatar>
-                    <span className="text-lg">AI Assistant</span>
+                    <span className="text-lg">Cash Kaki</span>
                 </div>
             </header>
             <main className="flex-1 overflow-y-auto p-6">
