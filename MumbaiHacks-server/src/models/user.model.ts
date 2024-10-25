@@ -24,6 +24,11 @@ const UserSchema = new mongoose.Schema<IUser>(
     salt: {
       type: String,
     },
+    organizationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: false, 
+      },
   },
   {
     timestamps: true,

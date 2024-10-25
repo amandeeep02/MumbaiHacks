@@ -9,4 +9,5 @@ export interface IUser extends Document {
   createdAt: string;
   hashed_password: string;
   salt: string;
+        organizationId?: ObjectId;
 }
