@@ -16,14 +16,20 @@ const Sidebar: React.FC = () => {
         </div>
         <div className="flex-1 overflow-auto py-2">
           <nav className="grid items-start px-4 text-sm font-medium">
-            <NavLink to="/dashboard" icon="HomeIcon" active={location.pathname === '/dashboard'}>
+          <NavLink to="/dashboard" icon="HomeIcon" active={location.pathname === '/dashboard'}>
               Dashboard
             </NavLink>
             <NavLink to="#" icon="BarChartIcon" active={location.pathname === '/reports'}>
               Reports
             </NavLink>
+            <NavLink to="/manager" icon="DollarSignIcon" active={location.pathname === '/manager'}>
+              Manager
+            </NavLink>
             <NavLink to="/transaction" icon="DollarSignIcon" active={location.pathname === '/transaction'}>
               Transactions
+            </NavLink>
+            <NavLink to="/chat" icon="DollarSignIcon" active={location.pathname === '/chat'}>
+              Chat
             </NavLink>
             <NavLink to="#" icon="SettingsIcon" active={location.pathname === '/settings'}>
               Settings

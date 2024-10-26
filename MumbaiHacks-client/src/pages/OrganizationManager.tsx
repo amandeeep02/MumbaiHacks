@@ -9,6 +9,7 @@ import { Building2, Users, Plus, CheckCircle, Briefcase } from "lucide-react"
 import { motion } from "framer-motion"
 import { getRequest } from '@/utility/generalServices'
 import { postRequest } from '@/utility/generalServices'
+import Sidebar from '@/components/Sidebar'
 
 export default function OrganizationManager() {
   const [organization, setOrganization] = useState({ name: '', description: '', businessType: '' })
@@ -73,142 +74,147 @@ export default function OrganizationManager() {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center text-primary">Organization Manager</h1>
-      <Tabs defaultValue="your-organization" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="your-organization">
-            <Briefcase className="mr-2 h-4 w-4" />
-            Your Organization
-          </TabsTrigger>
-          <TabsTrigger value="create-organization">
-            <Building2 className="mr-2 h-4 w-4" />
-            Create Organization
-          </TabsTrigger>
-          <TabsTrigger value="employees">
-            <Users className="mr-2 h-4 w-4" />
-            Employees
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="your-organization">
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Organization</CardTitle>
-              <CardDescription>Details of your current organization</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {userOrganization ? (
-                <div className="space-y-2">
-                  <p><strong>Name:</strong> {userOrganization.data ? userOrganization.data[0].name : null}</p>
-                  <p><strong>Description:</strong> {userOrganization.data ? userOrganization.data[0].description : null}</p>
-                  <p><strong>Business Type:</strong> {userOrganization.data ? userOrganization.data[0].businessType : null}</p>
-                </div>
-              ) : (
-                <p>You don't have an organization yet. Create one in the "Create Organization" tab.</p>
+    <div className="flex h-screen">
+      <Sidebar />
+      <div className="flex-1 overflow-auto">
+        <div className="container mx-auto p-6">
+          <h1 className="text-3xl font-bold mb-6 text-center text-primary">Organization Manager</h1>
+          <Tabs defaultValue="your-organization" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="your-organization">
+                <Briefcase className="mr-2 h-4 w-4" />
+                Your Organization
+              </TabsTrigger>
+              <TabsTrigger value="create-organization">
+                <Building2 className="mr-2 h-4 w-4" />
+                Create Organization
+              </TabsTrigger>
+              <TabsTrigger value="employees">
+                <Users className="mr-2 h-4 w-4" />
+                Employees
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="your-organization">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Organization</CardTitle>
+                  <CardDescription>Details of your current organization</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {userOrganization ? (
+                    <div className="space-y-2">
+                      <p><strong>Name:</strong> {userOrganization.data ? userOrganization.data[0].name : null}</p>
+                      <p><strong>Description:</strong> {userOrganization.data ? userOrganization.data[0].description : null}</p>
+                      <p><strong>Business Type:</strong> {userOrganization.data ? userOrganization.data[0].businessType : null}</p>
+                    </div>
+                  ) : (
+                    <p>You don't have an organization yet. Create one in the "Create Organization" tab.</p>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="create-organization">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Create Organization</CardTitle>
+                  <CardDescription>Add a new organization to your account</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={createOrganization} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Organization Name</Label>
+                      <Input id="name" name="name" value={organization.name} onChange={handleOrganizationChange} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="description">Organization Description</Label>
+                      <Input id="description" name="description" value={organization.description} onChange={handleOrganizationChange} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="businessType">Business Type</Label>
+                      <Input id="businessType" name="businessType" value={organization.businessType} onChange={handleOrganizationChange} required />
+                    </div>
+                    <Button type="submit" className="w-full">
+                      <Plus className="mr-2 h-4 w-4" /> Create Organization
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+              {createdOrganization && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Card className="mt-6">
+                    <CardHeader>
+                      <CardTitle>Created Organization</CardTitle>
+                      <CardDescription>Details of the newly created organization</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <p><strong>Name:</strong> {createdOrganization.name}</p>
+                        <p><strong>Description:</strong> {createdOrganization.description}</p>
+                        <p><strong>Business Type:</strong> {createdOrganization.businessType}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="create-organization">
-          <Card>
-            <CardHeader>
-              <CardTitle>Create Organization</CardTitle>
-              <CardDescription>Add a new organization to your account</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={createOrganization} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Organization Name</Label>
-                  <Input id="name" name="name" value={organization.name} onChange={handleOrganizationChange} required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Organization Description</Label>
-                  <Input id="description" name="description" value={organization.description} onChange={handleOrganizationChange} required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="businessType">Business Type</Label>
-                  <Input id="businessType" name="businessType" value={organization.businessType} onChange={handleOrganizationChange} required />
-                </div>
-                <Button type="submit" className="w-full">
-                  <Plus className="mr-2 h-4 w-4" /> Create Organization
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-          {createdOrganization && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="mt-6">
+            </TabsContent>
+            <TabsContent value="employees">
+              <Card>
                 <CardHeader>
-                  <CardTitle>Created Organization</CardTitle>
-                  <CardDescription>Details of the newly created organization</CardDescription>
+                  <CardTitle>Add Employee</CardTitle>
+                  <CardDescription>Add a new employee to an organization</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <p><strong>Name:</strong> {createdOrganization.name}</p>
-                    <p><strong>Description:</strong> {createdOrganization.description}</p>
-                    <p><strong>Business Type:</strong> {createdOrganization.businessType}</p>
-                  </div>
+                  <form onSubmit={addEmployee} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="organizationId">Organization ID</Label>
+                      <Input id="organizationId" name="organizationId" value={employee.organizationId} onChange={handleEmployeeChange} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="employeeName">Employee Name</Label>
+                      <Input id="employeeName" name="name" value={employee.name} onChange={handleEmployeeChange} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="employeeEmail">Employee Email</Label>
+                      <Input id="employeeEmail" name="email" type="email" value={employee.email} onChange={handleEmployeeChange} required />
+                    </div>
+                    <Button type="submit" className="w-full">
+                      <Plus className="mr-2 h-4 w-4" /> Add Employee
+                    </Button>
+                  </form>
                 </CardContent>
               </Card>
-            </motion.div>
-          )}
-        </TabsContent>
-        <TabsContent value="employees">
-          <Card>
-            <CardHeader>
-              <CardTitle>Add Employee</CardTitle>
-              <CardDescription>Add a new employee to an organization</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={addEmployee} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="organizationId">Organization ID</Label>
-                  <Input id="organizationId" name="organizationId" value={employee.organizationId} onChange={handleEmployeeChange} required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="employeeName">Employee Name</Label>
-                  <Input id="employeeName" name="name" value={employee.name} onChange={handleEmployeeChange} required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="employeeEmail">Employee Email</Label>
-                  <Input id="employeeEmail" name="email" type="email" value={employee.email} onChange={handleEmployeeChange} required />
-                </div>
-                <Button type="submit" className="w-full">
-                  <Plus className="mr-2 h-4 w-4" /> Add Employee
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-          {employees.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="mt-6">
-                <CardHeader>
-                  <CardTitle>Employees</CardTitle>
-                  <CardDescription>List of employees in the organization</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {employees.map((emp, index) => (
-                      <li key={index} className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        <span>{emp.name} ({emp.email})</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-        </TabsContent>
-      </Tabs>
+              {employees.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Card className="mt-6">
+                    <CardHeader>
+                      <CardTitle>Employees</CardTitle>
+                      <CardDescription>List of employees in the organization</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {employees.map((emp, index) => (
+                          <li key={index} className="flex items-center space-x-2">
+                            <CheckCircle className="h-4 w-4 text-green-500" />
+                            <span>{emp.name} ({emp.email})</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </div>
   )
 }
