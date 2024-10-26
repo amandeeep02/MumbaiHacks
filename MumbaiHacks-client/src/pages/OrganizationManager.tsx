@@ -1,170 +1,168 @@
-import React, { useState } from 'react';
-import axiosInstance from '@/utility/axiosInterceptor';
-import { Container, TextField, Button, Typography, Paper, List, ListItem, ListItemText, AppBar, Tabs, Tab } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import React, { useState } from 'react'
+import axiosInstance from '@/utility/axiosInterceptor'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Building2, Users, Plus, CheckCircle } from "lucide-react"
+import { motion } from "framer-motion"
 
-const useStyles = makeStyles({
-  container: {
-    padding: '20px',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    marginBottom: '20px',
-  },
-  button: {
-    alignSelf: 'flex-start',
-  },
-  list: {
-    marginTop: '20px',
-  },
-  appBar: {
-    marginBottom: '20px',
-  },
-});
-
-const OrganizationManager = () => {
-  const classes = useStyles();
-  const [activeTab, setActiveTab] = useState(0);
-  const [organization, setOrganization] = useState({ name: '', description: '', businessType: '' });
-  const [employee, setEmployee] = useState({ name: '', email: '', organizationId: '' });
-  const [createdOrganization, setCreatedOrganization] = useState(null);
-  const [employees, setEmployees] = useState([]);
-
-  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setActiveTab(newValue);
-  };
+export default function OrganizationManager() {
+  const [organization, setOrganization] = useState({ name: '', description: '', businessType: '' })
+  const [employee, setEmployee] = useState({ name: '', email: '', organizationId: '' })
+  const [createdOrganization, setCreatedOrganization] = useState(null)
+  const [employees, setEmployees] = useState([])
 
   const handleOrganizationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOrganization({ ...organization, [e.target.name]: e.target.value });
-  };
+    setOrganization({ ...organization, [e.target.name]: e.target.value })
+  }
 
   const handleEmployeeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmployee({ ...employee, [e.target.name]: e.target.value });
-  };
+    setEmployee({ ...employee, [e.target.name]: e.target.value })
+  }
 
   const createOrganization = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const response = await axiosInstance.post('/organizations/add', {
         ...organization,
         userId: localStorage.getItem('currentUserId')
-      });
-      setCreatedOrganization(response.data.organization);
+      })
+      setCreatedOrganization(response.data.organization)
     } catch (error) {
-      console.error('Error creating organization:', error);
+      console.error('Error creating organization:', error)
     }
-  };
+  }
 
-  const addEmployee = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const addEmployee = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     try {
-      axiosInstance.post('/organizations/addEmployee', {
+      const response = await axiosInstance.post('/organizations/addEmployee', {
         organizationId: employee.organizationId,
         employeeId: employee.email,
         userId: localStorage.getItem('currentUserId')
-      }).then((response) => {
-        setEmployees(response.data.employees);
-      });
+      })
+      setEmployees(response.data.employees)
     } catch (error) {
-      console.error('Error adding employee:', error);
+      console.error('Error adding employee:', error)
     }
-  };
+  }
 
   return (
-    <Container className={classes.container}>
-      <AppBar position="static" className={classes.appBar}>
-        <Tabs value={activeTab} onChange={handleTabChange}>
-          <Tab label="Add Organization" />
-          <Tab label="Add Employees" />
-        </Tabs>
-      </AppBar>
-
-      {activeTab === 0 && (
-        <Paper className={classes.form} component="form" onSubmit={createOrganization}>
-          <Typography variant="h6">Create Organization</Typography>
-          <TextField
-            label="Organization Name"
-            name="name"
-            value={organization.name}
-            onChange={handleOrganizationChange}
-            required
-          />
-          <TextField
-            label="Organization Description"
-            name="description"
-            value={organization.description}
-            onChange={handleOrganizationChange}
-            required
-          />
-          <TextField
-            label="Business Type"
-            name="businessType"
-            value={organization.businessType}
-            onChange={handleOrganizationChange}
-            required
-          />
-          <Button type="submit" variant="contained" color="primary" className={classes.button}>
-            Create Organization
-          </Button>
-        </Paper>
-      )}
-
-      {activeTab === 1 && (
-        <Paper className={classes.form} component="form" onSubmit={addEmployee}>
-          <Typography variant="h6">Add Employee</Typography>
-          <TextField
-            label="Organization ID"
-            name="organizationId"
-            value={employee.organizationId}
-            onChange={handleEmployeeChange}
-            required
-          />
-          <TextField
-            label="Employee Name"
-            name="name"
-            value={employee.name}
-            onChange={handleEmployeeChange}
-            required
-          />
-          <TextField
-            label="Employee Email"
-            name="email"
-            type="email"
-            value={employee.email}
-            onChange={handleEmployeeChange}
-            required
-          />
-          <Button type="submit" variant="contained" color="primary" className={classes.button}>
-            Add Employee
-          </Button>
-        </Paper>
-      )}
-
-      {createdOrganization && (
-        <Paper className={classes.form}>
-          <Typography variant="h6">Created Organization</Typography>
-          <Typography>Name: {createdOrganization.name}</Typography>
-          <Typography>Description: {createdOrganization.description}</Typography>
-          <Typography>Business Type: {createdOrganization.businessType}</Typography>
-        </Paper>
-      )}
-
-      {employees.length > 0 && (
-        <Paper className={classes.list}>
-          <Typography variant="h6">Employees</Typography>
-          <List>
-            {employees.map((emp, index) => (
-              <ListItem key={index}>
-                <ListItemText primary={`${emp.name} (${emp.email})`} />
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
-      )}
-    </Container>
-  );
-};
-
-export default OrganizationManager;
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center text-primary">Organization Manager</h1>
+      <Tabs defaultValue="organization" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="organization">
+            <Building2 className="mr-2 h-4 w-4" />
+            Organization
+          </TabsTrigger>
+          <TabsTrigger value="employees">
+            <Users className="mr-2 h-4 w-4" />
+            Employees
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="organization">
+          <Card>
+            <CardHeader>
+              <CardTitle>Create Organization</CardTitle>
+              <CardDescription>Add a new organization to your account</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={createOrganization} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Organization Name</Label>
+                  <Input id="name" name="name" value={organization.name} onChange={handleOrganizationChange} required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Organization Description</Label>
+                  <Input id="description" name="description" value={organization.description} onChange={handleOrganizationChange} required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="businessType">Business Type</Label>
+                  <Input id="businessType" name="businessType" value={organization.businessType} onChange={handleOrganizationChange} required />
+                </div>
+                <Button type="submit" className="w-full">
+                  <Plus className="mr-2 h-4 w-4" /> Create Organization
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+          {createdOrganization && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Created Organization</CardTitle>
+                  <CardDescription>Details of the newly created organization</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <p><strong>Name:</strong> {createdOrganization.name}</p>
+                    <p><strong>Description:</strong> {createdOrganization.description}</p>
+                    <p><strong>Business Type:</strong> {createdOrganization.businessType}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </TabsContent>
+        <TabsContent value="employees">
+          <Card>
+            <CardHeader>
+              <CardTitle>Add Employee</CardTitle>
+              <CardDescription>Add a new employee to an organization</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={addEmployee} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="organizationId">Organization ID</Label>
+                  <Input id="organizationId" name="organizationId" value={employee.organizationId} onChange={handleEmployeeChange} required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="employeeName">Employee Name</Label>
+                  <Input id="employeeName" name="name" value={employee.name} onChange={handleEmployeeChange} required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="employeeEmail">Employee Email</Label>
+                  <Input id="employeeEmail" name="email" type="email" value={employee.email} onChange={handleEmployeeChange} required />
+                </div>
+                <Button type="submit" className="w-full">
+                  <Plus className="mr-2 h-4 w-4" /> Add Employee
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+          {employees.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Employees</CardTitle>
+                  <CardDescription>List of employees in the organization</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    {employees.map((emp, index) => (
+                      <li key={index} className="flex items-center space-x-2">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <span>{emp.name} ({emp.email})</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}
