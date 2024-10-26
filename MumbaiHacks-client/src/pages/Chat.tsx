@@ -123,14 +123,14 @@ export default function Chat() {
           <Avatar className="w-8 h-8">
             <AvatarFallback>AI</AvatarFallback>
           </Avatar>
-          <span className="text-lg">Cash Kaki</span>
+          <span className="text-lg">Money Mentor</span>
         </div>
       </header>
       <main className="flex-1 overflow-y-auto p-6">
         <div className="space-y-4">
           {chatHistory.map((chat, index) => (
             <div
-              key={index}
+              key={index} 
               className={`${chat.userID === 'chatBot' ? 'text-right' : 'text-left'
                 } bg-muted/100 p-2 rounded font-semibold`}
             >
