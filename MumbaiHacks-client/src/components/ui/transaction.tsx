@@ -23,9 +23,9 @@ import { Label } from './label'
 
 export function Transaction() {
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       <Sidebar />
-      <div className="flex flex-col">
+      <div className="flex flex-col flex-1">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
           <Link to="#" className="lg:hidden">
             {/*<Package2Icon className="h-6 w-6" />*/}
@@ -83,37 +83,37 @@ export function Transaction() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[80px]">Date</TableHead>
-                  <TableHead className="max-w-[150px]">Client</TableHead>
+                  <TableHead className="max-w-[150px]">Added By</TableHead>
                   <TableHead className="hidden md:table-cell">
                     Category
                   </TableHead>
                   <TableHead className="hidden md:table-cell">
-                    Description
+                    Amount
                   </TableHead>
-                  <TableHead>Amount</TableHead>
+                  <TableHead>Description</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow>
-                  <TableCell>01/01/2023</TableCell>
-                  <TableCell className="font-medium">John Doe</TableCell>
+                  <TableCell>25/10/2024</TableCell>
+                  <TableCell className="font-medium">Aditya Belgaonkar</TableCell>
                   <TableCell className="hidden md:table-cell">
-                    Consulting
+                    Travel
                   </TableCell>
-                  <TableCell>$2000</TableCell>
+                  <TableCell>₹1800</TableCell>
                   <TableCell className="hidden md:table-cell">
-                    Consulting services for project XYZ
+                    flight - mumbai to delhi
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>02/01/2023</TableCell>
-                  <TableCell className="font-medium">Alice Smith</TableCell>
+                  <TableCell>26/10/2024</TableCell>
+                  <TableCell className="font-medium">Amandeep Singh</TableCell>
                   <TableCell className="hidden md:table-cell">
-                    Product Sales
+                    Office Supplies
                   </TableCell>
-                  <TableCell>$500</TableCell>
+                  <TableCell>₹1200</TableCell>
                   <TableCell className="hidden md:table-cell">
-                    10 units of product ABC
+                    10 extension cords
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -127,8 +127,6 @@ export function Transaction() {
               <form className="space-y-2">
                 <Label htmlFor="date">Date</Label>
                 <Input id="date" type="date" />
-                <Label htmlFor="client">Client</Label>
-                <Input id="client" type="text" />
                 <Label htmlFor="category">Category</Label>
                 <Input id="category" type="text" />
                 <Label htmlFor="amount">Amount</Label>
@@ -146,6 +144,7 @@ export function Transaction() {
     </div>
   )
 }
+
 
 function BarChartIcon() {
   return (

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import axiosInstance from '@/utility/axiosInterceptor'
 import { postRequest } from '@/utility/generalServices'
+import Sidebar from '@/components/Sidebar'
 
 export default function Chat() {
   const [inputValue, setInputValue] = useState('')
@@ -13,7 +14,6 @@ export default function Chat() {
   const [loading, setLoading] = useState(false)
   const genAI = new GoogleGenerativeAI(`${import.meta.env.VITE_GOOGLE_API_KEY}`)
 
-  //write a tsx function to take date such as "24/10/2024" and convert to 2023-10-01T00:00:00.000Z
   const convertDate = (date: String) => {
     const dateArray = date.split('/')
     const year = dateArray[2]
@@ -114,57 +114,60 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex flex-col h-screen">
-      <header className="bg-primary text-primary-foreground py-4 px-6 flex items-center justify-between">
-        <a href="/">
-          <h2 className="text-xl font-bold">{`< Dashboard`}</h2>
-        </a>
-        <div className="flex items-center gap-2">
-          <Avatar className="w-8 h-8">
-            <AvatarFallback>AI</AvatarFallback>
-          </Avatar>
-          <span className="text-lg">Money Mentor</span>
-        </div>
-      </header>
-      <main className="flex-1 overflow-y-auto p-6">
-        <div className="space-y-4">
-          {chatHistory.map((chat, index) => (
-            <div
-              key={index}
-              className={`${chat.userID === 'chatBot' ? 'text-right' : 'text-left'
-                } bg-muted/100 p-2 rounded font-semibold`}
+    <div className="flex h-screen">
+      <Sidebar />
+      <div className="flex-1 flex flex-col">
+        <header className="bg-primary text-primary-foreground py-4 px-6 flex items-center justify-between">
+          <a href="/">
+            {/* <h2 className="text-xl font-bold">{`< Dashboard`}</h2> */}
+          </a>
+          <div className="flex items-center gap-2">
+            <Avatar className="w-8 h-8">
+              <AvatarFallback>AI</AvatarFallback>
+            </Avatar>
+            <span className="text-lg">Money Mentor</span>
+          </div>
+        </header>
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="space-y-4">
+            {chatHistory.map((chat, index) => (
+              <div
+                key={index}
+                className={`${chat.userID === 'chatBot' ? 'text-right' : 'text-left'
+                  } bg-muted/100 p-2 rounded font-semibold`}
+              >
+                <p className="text-lg">{chat.textContent}</p>
+              </div>
+            ))}
+            {loading ? (
+              <div className="text-right bg-muted/100 p-2 rounded">
+                <p className="text-lg">Loading...</p>
+              </div>
+            ) : null}
+          </div>
+        </main>
+        <div className="bg-background border-t border-border px-6 py-4 bot-0">
+          <div className="relative">
+            <Textarea
+              className="w-full rounded-lg pr-16 resize-none bg-gray-100"
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+            />
+            <Button
+              type="submit"
+              size="icon"
+              onClick={getResponseForGivenPrompt}
+              className="absolute w-14 h-14 top-3 right-3"
             >
-              <p className="text-lg">{chat.textContent}</p>
-            </div>
-          ))}
-          {loading ? (
-            <div className="text-right bg-muted/100 p-2 rounded">
-              <p className="text-lg">Loading...</p>
-            </div>
-          ) : null}
-        </div>
-      </main>
-      <div className="bg-background border-t border-border px-6 py-4 bot-0">
-        <div className="relative">
-          <Textarea
-            className="w-full rounded-lg pr-16 resize-none"
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-          />
-          <Button
-            type="submit"
-            size="icon"
-            onClick={getResponseForGivenPrompt}
-            className="absolute w-14 h-14 top-3 right-3"
-          >
-            <SendIcon className="w-6 h-6" />
-            <span className="sr-only">Send</span>
+              <SendIcon className="w-6 h-6" />
+              <span className="sr-only">Send</span>
+            </Button>
+          </div>
+          <Button type="button" size="icon" className="mt-2 w-full">
+            <MicIcon className="w-6 h-6 mr-2" />
+            Voice Input
           </Button>
         </div>
-        <Button type="button" size="icon" className="mt-2 w-full">
-          <MicIcon className="w-6 h-6 mr-2" />
-          Voice Input
-        </Button>
       </div>
     </div>
   )
