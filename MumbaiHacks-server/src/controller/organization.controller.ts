@@ -90,3 +90,32 @@ export const addEmployee = catchAsync(async (req: Request, res: Response, next: 
     data: organization,
   });
 });
+
+// Get all organizations of a user
+export const getUserOrganizations = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+        console.log("holaaaa")
+
+        const { userId } = req.body;
+      
+        // Check if user exists
+        const user = await UserModel.findById(userId);
+
+        if (!user) {
+          return next(new AppError("User not found", 404));
+        }
+      
+        // Get organizations of the user
+        const organizations = await OrganizationModel.find({
+                //ehre owner is the user
+                owner: userId,
+         
+        })       .populate("employees")
+
+
+      
+        res.status(200).json({
+          status: "success",
+          data: organizations,
+        });
+      });

@@ -9,12 +9,12 @@ export const routes = (app: any) => {
   app.use("/api/auth", authRouter);
   app.use(
     "/api/users",
-    passport.authenticate("jwt", { session: false }),
+//     passport.authenticate("jwt", { session: false }),
     usersRouter
   );
   app.use(
     "/api/organizations",
-    passport.authenticate("jwt", { session: false }),
+//     passport.authenticate("jwt", { session: false }),
     organizationRoutes
   );
   app.use(
@@ -25,7 +25,7 @@ export const routes = (app: any) => {
 
         app.use(
         "/api/incomes",
-        passport.authenticate("jwt", { session: false }),
+        // passport.authenticate("jwt", { session: false }),
         incomeRoutes
         );
 

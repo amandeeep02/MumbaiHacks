@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Building2, Users, Plus, CheckCircle, Briefcase } from "lucide-react"
 import { motion } from "framer-motion"
+import { getRequest } from '@/utility/generalServices'
+import { postRequest } from '@/utility/generalServices'
 
 export default function OrganizationManager() {
   const [organization, setOrganization] = useState({ name: '', description: '', businessType: '' })
@@ -21,10 +23,10 @@ export default function OrganizationManager() {
 
   const fetchUserOrganization = async () => {
     try {
-      const response = await axiosInstance.get('/organizations/user', {
-        params: { userId: localStorage.getItem('currentUserId') }
+      const response = await postRequest('/organizations/user-organizations', {
+                userId: localStorage.getItem('currentUserId') 
       })
-      setUserOrganization(response.data.organization)
+      setUserOrganization(response.data)
     } catch (error) {
       console.error('Error fetching user organization:', error)
     }
@@ -41,12 +43,15 @@ export default function OrganizationManager() {
   const createOrganization = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      const response = await axiosInstance.post('/organizations/add', {
-        ...organization,
-        userId: localStorage.getItem('currentUserId')
-      })
-      setCreatedOrganization(response.data.organization)
-      fetchUserOrganization() // Refresh user organization after creation
+//       const response = await axiosInstance.post('/organizations/add', {
+//         ...organization,
+//         userId: localStorage.getItem('currentUserId')
+//       })
+
+// const response = await postRequest
+
+      setCreatedOrganization(response.data)
+      fetchUserOrganization() 
     } catch (error) {
       console.error('Error creating organization:', error)
     }
