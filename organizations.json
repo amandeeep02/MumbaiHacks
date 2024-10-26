@@ -1,0 +1,30 @@
+[
+  {
+    "id": "89389e05d3e46118720b020db8a84ca1",
+    "name": "kjsce",
+    "ownerId": 1889158377,
+    "members": [
+      {
+        "chatId": 1889158377,
+        "email": "amandeep@gmail.com",
+        "role": "owner",
+        "joinedAt": "2024-10-26T00:53:34.538Z"
+      }
+    ],
+    "createdAt": "2024-10-26T00:53:34.541Z"
+  },
+  {
+    "id": "847c77a3811ce67c1c0b94bbbe64ca26",
+    "name": "hijru boys",
+    "ownerId": 1889158377,
+    "members": [
+      {
+        "chatId": 1889158377,
+        "email": "amandeep@gmail.com",
+        "role": "owner",
+        "joinedAt": "2024-10-26T00:54:23.921Z"
+      }
+    ],
+    "createdAt": "2024-10-26T00:54:23.921Z"
+  }
+]
