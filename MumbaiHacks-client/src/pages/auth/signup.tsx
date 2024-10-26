@@ -42,10 +42,12 @@ export function Signup() {
     setLoading(true)
 
     try {
-      const res = await createAccount(formState)
+      const res = await createAccount(formState);
       console.log(res)
       if (res.status === 201) {
         setIsAlertOpen(true)
+        console.log(res);
+        localStorage.setItem('currentUserId', res.user._id);
       } else {
         if ('message' in res) {
           toast.error(res.message)

@@ -21,7 +21,6 @@ export const getAllExpensesByOrganization = catchAsync(async (req: Request, res:
   if (!userId || !organizationId) {
     return next(new AppError("userId and organizationId are required", 400));
   }
-
   const user = await UserModel.findById(userId);
   if (!user) {
     return next(new AppError("No user found with that ID", 404));
