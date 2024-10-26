@@ -23,6 +23,9 @@ const Sidebar: React.FC = () => {
             <NavLink to="/transaction" icon="DollarSignIcon">
               Transactions
             </NavLink>
+            <NavLink to="/chat" icon="">
+              Chat
+            </NavLink>
 
             <NavLink to="#" icon="SettingsIcon">
               Settings

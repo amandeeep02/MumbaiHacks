@@ -20,6 +20,7 @@ import {
 import Sidebar from '../Sidebar'
 import { Card, CardHeader, CardTitle, CardContent } from './card'
 import { Label } from './label'
+import DownloadCSVButton from './downloadcsv'
 
 export function Transaction() {
   return (
@@ -40,6 +41,7 @@ export function Transaction() {
                   placeholder="Search transactions..."
                   className="w-full bg-white shadow-none appearance-none pl-8 md:w-2/3 lg:w-1/3 dark:bg-gray-950"
                 />
+                <DownloadCSVButton />
               </div>
             </form>
           </div>

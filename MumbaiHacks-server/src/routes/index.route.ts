@@ -4,6 +4,7 @@ import passport from "passport";
 import organizationRoutes from "./organization.route";
 import expenseRoutes from "./expense.route";
 import incomeRoutes from "./income.route";
+import csvRoutes from "./csv.route";
 
 export const routes = (app: any) => {
   app.use("/api/auth", authRouter);
@@ -27,5 +28,10 @@ export const routes = (app: any) => {
     "/api/incomes",
     // passport.authenticate("jwt", { session: false }),
     incomeRoutes
+  );
+  app.use(
+    "/api/csv",
+    // passport.authenticate("jwt", { session: false }),
+    csvRoutes
   );
 };
