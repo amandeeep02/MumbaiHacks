@@ -1,8 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Button } from './ui/button' // Adjust this import path as needed
 
 const Sidebar: React.FC = () => {
+  const location = useLocation();
+
   return (
     <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -14,17 +16,16 @@ const Sidebar: React.FC = () => {
         </div>
         <div className="flex-1 overflow-auto py-2">
           <nav className="grid items-start px-4 text-sm font-medium">
-            <NavLink to="/dashboard" icon="HomeIcon">
+            <NavLink to="/dashboard" icon="HomeIcon" active={location.pathname === '/dashboard'}>
               Dashboard
             </NavLink>
-            <NavLink to="#" icon="BarChartIcon">
+            <NavLink to="#" icon="BarChartIcon" active={location.pathname === '/reports'}>
               Reports
             </NavLink>
-            <NavLink to="/transaction" icon="DollarSignIcon">
+            <NavLink to="/transaction" icon="DollarSignIcon" active={location.pathname === '/transaction'}>
               Transactions
             </NavLink>
-
-            <NavLink to="#" icon="SettingsIcon">
+            <NavLink to="#" icon="SettingsIcon" active={location.pathname === '/settings'}>
               Settings
             </NavLink>
           </nav>
@@ -59,4 +60,4 @@ const NavLink: React.FC<NavLinkProps> = ({ to, icon, children, active }) => {
   )
 }
 
-export default Sidebar
+export default Sidebar 
