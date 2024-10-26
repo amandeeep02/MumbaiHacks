@@ -130,7 +130,7 @@ export default function Chat() {
         <div className="space-y-4">
           {chatHistory.map((chat, index) => (
             <div
-              key={index} 
+              key={index}
               className={`${chat.userID === 'chatBot' ? 'text-right' : 'text-left'
                 } bg-muted/100 p-2 rounded font-semibold`}
             >
