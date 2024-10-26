@@ -120,7 +120,7 @@ export default function Dashboard() {
                   <ResponsiveContainer width="100%" height={350}>
                     <BarChart data={expenseData}>
                       <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value: any) => `$${value}`} />
+                      <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value: any) => `₹${value}`} />
                       <Bar dataKey="amount" fill="#404040" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
