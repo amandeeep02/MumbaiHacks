@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axiosInstance from '@/utility/axiosInterceptor'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Building2, Users, Plus, CheckCircle } from "lucide-react"
+import { Building2, Users, Plus, CheckCircle, Briefcase } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function OrganizationManager() {
@@ -13,6 +13,22 @@ export default function OrganizationManager() {
   const [employee, setEmployee] = useState({ name: '', email: '', organizationId: '' })
   const [createdOrganization, setCreatedOrganization] = useState(null)
   const [employees, setEmployees] = useState([])
+  const [userOrganization, setUserOrganization] = useState(null)
+
+  useEffect(() => {
+    fetchUserOrganization()
+  }, [])
+
+  const fetchUserOrganization = async () => {
+    try {
+      const response = await axiosInstance.get('/organizations/user', {
+        params: { userId: localStorage.getItem('currentUserId') }
+      })
+      setUserOrganization(response.data.organization)
+    } catch (error) {
+      console.error('Error fetching user organization:', error)
+    }
+  }
 
   const handleOrganizationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOrganization({ ...organization, [e.target.name]: e.target.value })
@@ -30,6 +46,7 @@ export default function OrganizationManager() {
         userId: localStorage.getItem('currentUserId')
       })
       setCreatedOrganization(response.data.organization)
+      fetchUserOrganization() // Refresh user organization after creation
     } catch (error) {
       console.error('Error creating organization:', error)
     }
@@ -52,18 +69,41 @@ export default function OrganizationManager() {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-center text-primary">Organization Manager</h1>
-      <Tabs defaultValue="organization" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="organization">
+      <Tabs defaultValue="your-organization" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="your-organization">
+            <Briefcase className="mr-2 h-4 w-4" />
+            Your Organization
+          </TabsTrigger>
+          <TabsTrigger value="create-organization">
             <Building2 className="mr-2 h-4 w-4" />
-            Organization
+            Create Organization
           </TabsTrigger>
           <TabsTrigger value="employees">
             <Users className="mr-2 h-4 w-4" />
             Employees
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="organization">
+        <TabsContent value="your-organization">
+          <Card>
+            <CardHeader>
+              <CardTitle>Your Organization</CardTitle>
+              <CardDescription>Details of your current organization</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {userOrganization ? (
+                <div className="space-y-2">
+                  <p><strong>Name:</strong> {userOrganization.name}</p>
+                  <p><strong>Description:</strong> {userOrganization.description}</p>
+                  <p><strong>Business Type:</strong> {userOrganization.businessType}</p>
+                </div>
+              ) : (
+                <p>You don't have an organization yet. Create one in the "Create Organization" tab.</p>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="create-organization">
           <Card>
             <CardHeader>
               <CardTitle>Create Organization</CardTitle>
