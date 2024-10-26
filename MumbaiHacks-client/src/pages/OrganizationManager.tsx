@@ -26,6 +26,7 @@ export default function OrganizationManager() {
       const response = await postRequest('/organizations/user-organizations', {
                 userId: localStorage.getItem('currentUserId') 
       })
+      console.log(response.data)
       setUserOrganization(response.data)
     } catch (error) {
       console.error('Error fetching user organization:', error)
@@ -43,12 +44,12 @@ export default function OrganizationManager() {
   const createOrganization = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-//       const response = await axiosInstance.post('/organizations/add', {
-//         ...organization,
-//         userId: localStorage.getItem('currentUserId')
-//       })
+      const response = await axiosInstance.post('/organizations/add', {
+        ...organization,
+        userId: localStorage.getItem('currentUserId')
+      })
 
-// const response = await postRequest
+      console.log(response)
 
       setCreatedOrganization(response.data)
       fetchUserOrganization() 
