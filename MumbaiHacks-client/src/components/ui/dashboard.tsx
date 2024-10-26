@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 import { ArrowDownIcon, ArrowUpIcon, DollarSign, LineChart, PlusCircle } from "lucide-react"
 
@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import Sidebar from "@/components/Sidebar"
+import { postRequest } from "@/utility/generalServices"
+
 
 const recentTransactions = [
   { id: 1, description: "Office Supplies", amount: -250.00, date: "2024-10-23" },
@@ -23,9 +25,27 @@ const expenseData = [
   { name: "Jun", amount: 2390 },
 ]
 
+
+
+
 export default function Dashboard() {
   const [newExpenseAmount, setNewExpenseAmount] = useState("")
   const [newExpenseDescription, setNewExpenseDescription] = useState("")
+  const [responseData, setResponseData] = useState(null);
+
+  useEffect(() => {
+  const fetchExpenses = async () => {
+    try {
+      const response = await postRequest('/api/expenses/organization', {});
+      setResponseData(response.data);
+      console.log(response);
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+    }
+  };
+  fetchExpenses();
+}, []);
+
 
   const handleAddExpense = () => {
     // Here you would typically add the new expense to your state or send it to an API
