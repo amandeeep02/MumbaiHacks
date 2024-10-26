@@ -2,6 +2,8 @@ import { IUser } from "../Interfaces/user.interface";
 import mongoose from "mongoose";
 import crypto from "crypto";
 import { Schema } from "mongoose";
+// Import Organization model to register it in Mongoose before populating
+import {OrganizationModel }from './organization.model';
 
 const UserSchema = new mongoose.Schema<IUser>(
   {
@@ -73,6 +75,5 @@ UserSchema.methods = {
 
 UserSchema.set("toJSON", { virtuals: true });
 
-const UserModel = mongoose.model<IUser>("Users", UserSchema);
-
+const UserModel = mongoose.model<IUser>("User", UserSchema);
 export default UserModel;

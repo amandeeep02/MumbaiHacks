@@ -76,7 +76,7 @@ export default function Dashboard() {
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$12,345</div>
+                  <div className="text-2xl font-bold">₹12,345</div>
                   <p className="text-xs text-muted-foreground">+2.5% from last month</p>
                 </CardContent>
               </Card>
@@ -86,7 +86,7 @@ export default function Dashboard() {
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$45,678</div>
+                  <div className="text-2xl font-bold">₹45,678</div>
                   <p className="text-xs text-muted-foreground">+18.2% from last month</p>
                 </CardContent>
               </Card>
@@ -96,13 +96,13 @@ export default function Dashboard() {
                   <LineChart className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$33,333</div>
+                  <div className="text-2xl font-bold">₹33,333</div>
                   <p className="text-xs text-muted-foreground">+8.3% from last month</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
+                  <CardTitle className="text-sm font-medium">Total Transactions</CardTitle>
                   <LineChart className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -120,7 +120,7 @@ export default function Dashboard() {
                   <ResponsiveContainer width="100%" height={350}>
                     <BarChart data={expenseData}>
                       <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value: any) => `$${value}`} />
+                      <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value: any) => `₹${value}`} />
                       <Bar dataKey="amount" fill="#404040" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
@@ -140,14 +140,14 @@ export default function Dashboard() {
                             <ArrowUpIcon className="h-4 w-4 text-white" />
                           ) : (
                             <ArrowDownIcon className="h-4 w-4 text-white" />
-                          )}
+                          )}  
                         </div>
                         <div className="ml-4 space-y-1">
                           <p className="text-sm font-medium leading-none">{transaction.description}</p>
                           <p className="text-sm text-muted-foreground">{transaction.date}</p>
                         </div>
                         <div className={`ml-auto font-medium ${transaction.amount > 0 ? "text-green-500" : "text-red-500"}`}>
-                          {transaction.amount > 0 ? "+" : "-"}${Math.abs(transaction.amount).toFixed(2)}
+                          {transaction.amount > 0 ? "+" : "-"}₹{Math.abs(transaction.amount).toFixed(2)}
                         </div>
                       </div>
                     ))}
