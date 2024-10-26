@@ -48,6 +48,8 @@ export function Login() {
 
       if (res.status === 200) {
         informParent(res)
+        localStorage.setItem('currentUserId', res.user._id);
+        console.log(res);
       } else {
         if ('message' in res) toast.error(res.message)
       }
