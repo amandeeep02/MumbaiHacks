@@ -36,7 +36,7 @@ export default function Chat() {
       date: convertDate(date),
       paymentMethod: 'Credit Card',
       tags: tags,
-      createdBy: '671becaae260c817b36fee3c',
+      createdBy: localStorage.getItem('_id'),
       payeeType: 'User',
       payeeId: '671bef001f29eb67a5432c9f',
     })
