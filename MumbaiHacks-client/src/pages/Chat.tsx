@@ -36,10 +36,22 @@ export default function Chat() {
       date: convertDate(date),
       paymentMethod: 'Credit Card',
       tags: tags,
-      createdBy: '671becaae260c817b36fee3c',
+      createdBy: localStorage.getItem('_id'),
       payeeType: 'User',
       payeeId: '671bef001f29eb67a5432c9f',
     })
+
+    console.log({
+      organizationId: '671bed7fe260c817b36fee43',
+      amount: 5000,
+      description: description,
+      date: convertDate(date),
+      paymentMethod: 'Credit Card',
+      tags: tags,
+      createdBy: localStorage.getItem('_id'),
+      payeeType: 'User',
+      payeeId: '671bef001f29eb67a5432c9f',
+    });
 
     console.log("Hello");
   }

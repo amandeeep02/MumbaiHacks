@@ -46,6 +46,10 @@ export function Login() {
         password: formState.password,
       })
 
+      console.log(res);
+
+      localStorage.setItem('_id', res.user.id);
+
       if (res.status === 200) {
         informParent(res)
       } else {
