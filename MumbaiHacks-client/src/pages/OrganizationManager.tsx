@@ -24,9 +24,9 @@ export default function OrganizationManager() {
   const fetchUserOrganization = async () => {
     try {
       const response = await postRequest('/organizations/user-organizations', {
-                userId: localStorage.getItem('currentUserId') 
+        userId: localStorage.getItem('currentUserId')
       })
-      console.log(response.data)
+      // console.log(response.data)
       setUserOrganization(response.data)
     } catch (error) {
       console.error('Error fetching user organization:', error)
@@ -49,10 +49,10 @@ export default function OrganizationManager() {
         userId: localStorage.getItem('currentUserId')
       })
 
-      console.log(response)
+      // console.log(response)
 
       setCreatedOrganization(response.data)
-      fetchUserOrganization() 
+      fetchUserOrganization()
     } catch (error) {
       console.error('Error creating organization:', error)
     }
@@ -99,9 +99,9 @@ export default function OrganizationManager() {
             <CardContent>
               {userOrganization ? (
                 <div className="space-y-2">
-                  <p><strong>Name:</strong> {userOrganization.name}</p>
-                  <p><strong>Description:</strong> {userOrganization.description}</p>
-                  <p><strong>Business Type:</strong> {userOrganization.businessType}</p>
+                  <p><strong>Name:</strong> {userOrganization.data ? userOrganization.data[0].name : null}</p>
+                  <p><strong>Description:</strong> {userOrganization.data ? userOrganization.data[0].description : null}</p>
+                  <p><strong>Business Type:</strong> {userOrganization.data ? userOrganization.data[0].businessType : null}</p>
                 </div>
               ) : (
                 <p>You don't have an organization yet. Create one in the "Create Organization" tab.</p>
